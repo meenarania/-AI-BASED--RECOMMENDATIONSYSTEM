@@ -91,3 +91,5 @@ The AI-Based Recommendation System project demonstrates how artificial intellige
 This project successfully fulfills its goal of showcasing the practical application of AI concepts in software development and serves as a strong learning experience for future enhancements.
 
   #OUTPUT#
+
+  <img width="606" height="34" alt="Image" src="https://github.com/user-attachments/assets/2348c39f-027e-4514-a651-d94388a615b4" />
