@@ -1,92 +1,76 @@
-#COMPANY#:CODTECH IT SOLUTIONS
+import java.util.*;
 
-#NAME#:MEENARANI A
+public class RecommendationSystem {
 
-#INTERN ID#:CT04DR2761
+    // User-item ratings
+    static Map<String, Map<String, Integer>> userRatings = new HashMap<>();
 
-#DOMAIN#:JAVA PROGRAMMING
+    public static void main(String[] args) {
+        // Sample data
+        Map<String, Integer> aliceRatings = new HashMap<>();
+        aliceRatings.put("Item1", 5);
+        aliceRatings.put("Item2", 3);
+        aliceRatings.put("Item3", 2);
+        userRatings.put("Alice", aliceRatings);
 
-#DURATION#:4 WEEKS
+        Map<String, Integer> bobRatings = new HashMap<>();
+        bobRatings.put("Item1", 4);
+        bobRatings.put("Item3", 5);
+        bobRatings.put("Item4", 1);
+        userRatings.put("Bob", bobRatings);
 
-#MENTOR#:NEELA SANTHOSH KUMAR
+        Map<String, Integer> charlieRatings = new HashMap<>();
+        charlieRatings.put("Item2", 5);
+        charlieRatings.put("Item3", 3);
+        charlieRatings.put("Item4", 4);
+        userRatings.put("Charlie", charlieRatings);
 
-  AI-BASED RECOMMENDATION SYSTEM – PROJECT OVERVIEW
+        String targetUser = "Alice";
+        List<String> recommendations = recommendItems(targetUser, 2);
+        System.out.println("Recommendations for " + targetUser + ": " + recommendations);
+    }
 
-  #Introduction#
+    // Recommend items using collaborative filtering
+    public static List<String> recommendItems(String user, int topN) {
+        Map<String, Double> scores = new HashMap<>();
+        Map<String, Integer> targetRatings = userRatings.get(user);
 
-An AI-Based Recommendation System is designed to analyze user behavior and preferences in order to suggest relevant items automatically. These systems are widely used in real-world applications such as e-commerce platforms, streaming services, online learning portals, and social media.
+        for (String otherUser : userRatings.keySet()) {
+            if (otherUser.equals(user)) continue;
+            Map<String, Integer> otherRatings = userRatings.get(otherUser);
 
- # Objective of the Project#
+            double similarity = cosineSimilarity(targetRatings, otherRatings);
 
-The primary objectives of this project are:
+            for (String item : otherRatings.keySet()) {
+                if (!targetRatings.containsKey(item)) {
+                    scores.put(item, scores.getOrDefault(item, 0.0) + similarity * otherRatings.get(item));
+                }
+            }
+        }
 
-To understand the fundamentals of recommendation systems
+        // Sort items by score descending
+        List<String> recommendedItems = new ArrayList<>(scores.keySet());
+        recommendedItems.sort((i1, i2) -> Double.compare(scores.get(i2), scores.get(i1)));
 
-To analyze user preferences or item features
+        return recommendedItems.subList(0, Math.min(topN, recommendedItems.size()));
+    }
 
-To apply AI logic for generating recommendations
+    // Cosine similarity between two users
+    public static double cosineSimilarity(Map<String, Integer> ratings1, Map<String, Integer> ratings2) {
+        Set<String> commonItems = new HashSet<>(ratings1.keySet());
+        commonItems.retainAll(ratings2.keySet());
 
-To improve decision-making through data-driven suggestions
+        if (commonItems.isEmpty()) return 0.0;
 
-This project also aims to give hands-on exposure to how artificial intelligence concepts are applied in practical software solutions.
+        double dot = 0, norm1 = 0, norm2 = 0;
+        for (String item : commonItems) {
+            dot += ratings1.get(item) * ratings2.get(item);
+        }
 
-#Working Principle#
+        for (int rating : ratings1.values()) norm1 += rating * rating;
+        for (int rating : ratings2.values()) norm2 += rating * rating;
 
-The recommendation system works by collecting and processing data such as user inputs, preferences, ratings, or interaction history. Based on this data, the system applies recommendation logic to identify similarities or patterns.
+        return dot / (Math.sqrt(norm1) * Math.sqrt(norm2));
+    }
+}
 
-Depending on implementation, the system may use:
-
-Content-based filtering, where recommendations are made based on item features similar to those the user liked before
-
-Rule-based logic, where predefined conditions determine recommendations
-
-Basic machine learning techniques, such as similarity scoring or classification
-
-Once the analysis is complete, the system outputs a list of recommended items tailored to the user’s interests.
-
-#System Architecture#
-
-The project architecture is divided into the following components:
-
-Input Module – Accepts user data such as preferences or choices
-
-Processing Module – Applies AI logic or algorithms to analyze the data
-
-Recommendation Engine – Generates personalized suggestions
-
-Output Module – Displays the recommended results clearly to the user
-
-Each module is designed to be simple, modular, and easy to understand, ensuring clarity and maintainability.
-
-#Technologies Used#
-
-Programming Language: Java / Python (depending on implementation)
-
-Concepts Used: Artificial Intelligence, Data Analysis, Logic-based Decision Making
-
-Tools: IDE such as VS Code or Eclipse
-
-No heavy frameworks are required, keeping the project lightweight and suitable for internship-level evaluation.
-
-#Applications#
-
-AI-based recommendation systems are used in:
-
-Online shopping platforms (product suggestions)
-
-Streaming services (movie or music recommendations)
-
-E-learning platforms (course suggestions)
-
-News and content platforms
-
-This project reflects how similar systems function at a foundational level in these real-world applications.
-
-#Conclusion#
-
-The AI-Based Recommendation System project demonstrates how artificial intelligence can be used to enhance user experience through personalization. By analyzing data and applying intelligent logic, the system reduces information overload and provides relevant suggestions efficiently. Although the project uses simplified techniques, it lays a strong foundation for understanding more advanced AI and machine learning models used in industry-level systems.
-
-This project successfully fulfills its goal of showcasing the practical application of AI concepts in software development and serves as a strong learning experience for future enhancements.
-
-  #OUTPUT#
-  
